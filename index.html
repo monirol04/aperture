@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Aperture</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      overflow-x: hidden;
+    }
+    header {
+      background-color: #222;
+      color: #fff;
+      padding: 20px 40px;
+      text-align: center;
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      font-weight: bold;
+      position: relative;
+      z-index: 1001;
+    }
+    nav {
+      background-color: #444;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1001;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 1.1em;
+      transition: color 0.3s ease;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      user-select: none;
+    }
+    nav a:hover,
+    nav a.active {
+      color: #ffcc00;
+      background-color: #333;
+    }
+    main {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+      min-height: 400px;
+      position: relative;
+      z-index: 1;
+    }
+    .section {
+      display: none;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    .section.active {
+      display: block;
+    }
+    .section h2 {
+      margin-top: 0;
+      color: #222;
+    }
+    /* News list styles */
+    .news-article {
+      margin-bottom: 20px;
+      cursor: pointer;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .news-article h3 {
+      margin: 0 0 8px 0;
+      color: #444;
+      position: relative;
+      user-select: none;
+    }
+    .news-article p.summary {
+      margin: 0;
+      color: #555;
+      line-height: 1.5;
+    }
+    .news-article:hover h3 {
+      color: #ffcc00;
+    }
+    .news-article img {
+      width: 150px;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .news-text {
+      flex: 1;
+    }
+    /* Fullscreen overlay for full news content */
+    #news-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #fff;
+      overflow-y: auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      padding: 40px 60px 60px 60px;
+      display: none;
+      z-index: 2000;
+      max-width: 900px;
+      margin: 0 auto;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 8px;
+    }
+    #news-overlay h2 {
+      margin-top: 0;
+      font-size: 2em;
+      color: #222;
+      margin-bottom: 20px;
+    }
+    #news-overlay img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    #news-overlay p {
+      font-size: 1.1em;
+      line-height: 1.8;
+      color: #444;
+    }
+    #news-close-btn {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      font-size: 2.5em;
+      color: #222;
+      cursor: pointer;
+      font-weight: bold;
+      background: transparent;
+      border: none;
+      z-index: 2100;
+      user-select: none;
+      line-height: 1;
+      padding: 0;
+    }
+    #news-close-btn:hover {
+      color: #ffcc00;
+    }
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.5em;
+        padding: 15px 10px;
+      }
+      main {
+        padding: 0 5px;
+      }
+      nav a {
+        margin: 8px 10px;
+      }
+      #news-overlay {
+        padding: 20px 15px 40px 15px;
+        width: 90vw;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 6px;
+      }
+      #news-close-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>The Aperture</header>
+  <nav>
+    <a href="#" data-section="home" class="active">Home</a>
+    <a href="#" data-section="news">News</a>
+    <a href="#" data-section="documentaries">Documentaries</a>
+    <a href="#" data-section="features">Features</a>
+    <a href="#" data-section="about">About</a>
+    <a href="#" data-section="contact">Contact</a>
+  </nav>
+  <main>
+    <!-- Home Section -->
+    <section id="home" class="section active">
+      <h2>Welcome to The Aperture</h2>
+      <p>Your source for in-depth news and documentary storytelling. Explore stories that matter, told with clarity and focus.</p>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="section">
+      <h2>Latest News: Global Perspectives</h2>
+
+      <div class="news-article" tabindex="0" role="button" aria-pressed="false" aria-label="Open article Climate Summit 2025">
+        <img src="https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&h=150" alt="Climate Summit 2025" />
+        <div class="news-text">
+          <h3>Climate Summit 2025: Nations Commit to New Green Targets</h3>
+          <p class="summary">World leaders gathered this week to agree on ambitious new goals to reduce carbon emissions by 2030, aiming to limit global warming to 1.5°C.</p>
+        </div>
+      </div>
+
+      <div class="news-article" tabindex="0" role="button" aria-pressed="false" aria-label="Open article Breakthrough in Renewable Energy Storage">
+        <img src="https://images.pexels.com/photos/256381/pexels-photo-256381.jpeg?auto=compress&cs=tinysrgb&h=150" alt="Renewable Energy Storage" />
+        <div class="news-text">
+          <h3>Breakthrough in Renewable Energy Storage</h3>
+          <p class="summary">Scientists have developed a new battery technology that could revolutionize how renewable energy is stored and used, making clean power more accessible worldwide.</p>
+        </div>
+      </div>
+
+      <div class="news-article" tabindex="0" role="button" aria-pressed="false" aria-label="Open article Global Economy Shows Signs of Recovery">
+        <img src="https://images.pexels.com/photos/572780/pexels-photo-572780.jpeg?auto=compress&cs=tinysrgb&h=150" alt="Global Economy" />
+        <div class="news-text">
+          <h3>Global Economy Shows Signs of Recovery</h3>
+          <p class="summary">Recent reports indicate a steady economic rebound in multiple regions, driven by technological innovation and increased trade activity.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Documentaries Section -->
+    <section id="documentaries" class="section">
+      <h2>Documentaries</h2>
+      <p>Explore our curated documentaries that dive deep into stories shaping our world.</p>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section">
+      <h2>Features</h2>
+      <p>Read in-depth features and investigative reports crafted by our expert journalists.</p>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+      <h2>About The Aperture</h2>
+      <p>The Aperture is dedicated to delivering insightful news and compelling documentary storytelling with integrity and clarity.</p>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+      <h2>Contact Us</h2>
+      <p>Have questions or story ideas? Reach out to us at <a href="mailto:contact@theaperture.com">contact@theaperture.com</a>.</p>
+    </section>
+  </main>
+
+  <!-- News Fullscreen Overlay -->
+  <div id="news-overlay" aria-hidden="true" role="dialog" aria-label="Full News Article">
+    <button id="news-close-btn" aria-label="Close Full News Article">&times;</button>
+    <h2 id="overlay-title"></h2>
+    <img id="overlay-image" src="" alt="" />
+    <p id="overlay-content"></p>
+  </div>
+
+  <footer>&copy; 2025 The Aperture. All rights reserved.</footer>
+
+  <script>
+    const navLinks = document.querySelectorAll('nav a[data-section]');
+    const sections = document.querySelectorAll('main .section');
+    const newsOverlay = document.getElementById('news-overlay');
+    const newsCloseBtn = document.getElementById('news-close-btn');
+    const overlayTitle = document.getElementById('overlay-title');
+    const overlayImage = document.getElementById('overlay-image');
+    const overlayContent = document.getElementById('overlay-content');
+
+    // Article data for overlay content including image URLs
+    const articles = {
+      "Climate Summit 2025: Nations Commit to New Green Targets": {
+        content: `World leaders gathered this week to agree on ambitious new goals to reduce carbon emissions by 2030, aiming to limit global warming to 1.5°C. The summit included representatives from over 190 countries, focusing on sustainable development and renewable energy investments. Experts believe this agreement could be a turning point in climate action.`,
+        image: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&h=900",
+        alt: "Climate Summit 2025"
+      },
+      "Breakthrough in Renewable Energy Storage": {
+        content: `Scientists have developed a new battery technology that could revolutionize how renewable energy is stored and used, making clean power more accessible worldwide. This technology promises higher capacity, faster charging, and longer lifespan, potentially accelerating the transition to a green energy future.`,
+        image: "https://images.pexels.com/photos/256381/pexels-photo-256381.jpeg?auto=compress&cs=tinysrgb&h=900",
+        alt: "Renewable Energy Storage"
+      },
+      "Global Economy Shows Signs of Recovery": {
+        content: `Recent reports indicate a steady economic rebound in multiple regions, driven by technological innovation and increased trade activity. Economists are cautiously optimistic, noting improvements in employment rates and consumer confidence, although challenges remain due to geopolitical tensions.`,
+        image: "https://images.pexels.com/photos/572780/pexels-photo-572780.jpeg?auto=compress&cs=tinysrgb&h=900",
+        alt: "Global Economy"
+      }
+    };
+
+    let lastActiveSectionId = 'home';
+
+    // Show a section by id
+    function showSection(id) {
+      sections.forEach(sec => sec.classList.remove('active'));
+      const section = document.getElementById(id);
+      if (section) {
+        section.classList.add('active');
+        lastActiveSectionId = id;
+      }
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-section') === id);
+      });
+      // Hide overlay if open
+      hideOverlay();
+    }
+
+    // Hide overlay function
+    function hideOverlay() {
+      newsOverlay.style.display = 'none';
+      newsOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    // Show overlay function
+    function showOverlay(title, articleData) {
+      overlayTitle.textContent = title;
+      overlayContent.textContent = articleData.content;
+      overlayImage.src = articleData.image;
+      overlayImage.alt = articleData.alt;
+      newsOverlay.style.display = 'block';
+      newsOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      newsCloseBtn.focus();
+    }
+
+    // Navigation click handlers
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        if (newsOverlay.style.display === 'block') return; // ignore nav clicks if overlay open
+        const sectionId = link.getAttribute('data-section');
+        showSection(sectionId);
+      });
+    });
+
+    // News article click handlers
+    const newsArticles = document.querySelectorAll('#news .news-article');
+    newsArticles.forEach(article => {
+      article.addEventListener('click', () => {
+        const title = article.querySelector('h3').textContent;
+        const articleData = articles[title];
+        if (articleData) {
+          showOverlay(title, articleData);
+        } else {
+          showOverlay(title, {content: "Full article content unavailable.", image: "", alt: ""});
+        }
+      });
+      // Accessibility: allow keyboard enter/space to open overlay
+      article.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          article.click();
+        }
+      });
+    });
+
+    // Close overlay button
+    newsCloseBtn.addEventListener('click', () => {
+      hideOverlay();
+    });
+
+    // Initialize showing home section
+    showSection('home');
+  </script>
+</body>
+</html>
